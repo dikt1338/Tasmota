@@ -201,11 +201,23 @@ void AdcEverySecond(void)
 {
   if (ADC0_TEMP == my_adc0) {
     int adc = AdcRead(2);
-    // Steinhart-Hart equation for thermistor as temperature sensor
-    double Rt = (adc * Settings.adc_param1) / (1024.0 * ANALOG_V33 - (double)adc);
-    double BC = (double)Settings.adc_param3 / 10000;
-    double T = BC / (BC / ANALOG_T0 + TaylorLog(Rt / (double)Settings.adc_param2));
-    Adc.temperature = ConvertTemp(TO_CELSIUS(T));
+        // Steinhart-Hart equation for thermistor as temperature sensor
+//***BEGIN OF CHANGE: BWL -> ADC Temp for Wemos Board***
+//    double Rt = (adc * Settings.adc_param1) / (1024.0 * ANALOG_V33 - (double)adc);
+//    double BC = (double)Settings.adc_param3 / 10000;
+//    double T = BC / (BC / ANALOG_T0 + TaylorLog(Rt / (double)Settings.adc_param2));
+//    Adc.temperature = ConvertTemp(TO_CELSIUS(T));
+    float resistance = 1023 / adc - 1;
+    resistance = Settings.adc_param1 / resistance;
+    float steinhart;
+    steinhart = resistance / Settings.adc_param2;     // (R/Ro)
+    steinhart = log(steinhart);                       // ln(R/Ro)
+    steinhart /= (Settings.adc_param3 / 10000);       // 1/B * ln(R/Ro)
+    steinhart += 1.0 / (25 + 273.15);                 // + (1/To)
+    steinhart = 1.0 / steinhart;                      // Invert
+    steinhart -= 273.15;                              // convert to C
+    Adc.temperature = steinhart;
+   //***END OF CHANGE: BWL -> ADC Temp for Wemos Board***
   }
   else if (ADC0_CT_POWER == my_adc0) {
     AdcGetCurrentPower(5);

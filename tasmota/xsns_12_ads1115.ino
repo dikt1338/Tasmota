@@ -179,10 +179,29 @@ void Ads1115Detect(void)
   }
 }
 
+//***BEGIN OF CHANGE: BWL -> Temperature conversion  
+float adcToTemperature(int16_t localAdc2)
+{
+    float adcResistance = 17600.0 / localAdc2 - 1;
+    adcResistance = Settings.adc_param1 / adcResistance;
+    float steinhart;
+    steinhart = adcResistance / Settings.adc_param2;     // (R/Ro)
+    steinhart = log(steinhart);                       // ln(R/Ro)
+    steinhart /= (Settings.adc_param3 / 10000);       // 1/B * ln(R/Ro)
+    steinhart += 1.0 / (25 + 273.15);                 // + (1/To)
+    steinhart = 1.0 / steinhart;                      // Invert
+    steinhart -= 273.15;                              // convert to C
+    return (steinhart < -25.0) ? 0.0 : steinhart;
+}
+//***END OF CHANGE: BWL -> Temperature conversion
+
 void Ads1115Show(bool json)
 {
   int16_t values[4];
-
+//***BEGIN OF CHANGE: BWL -> Temperature conversion  
+  float adcTemperature;
+  char adcTemperature_c[33];
+//***END OF CHANGE: BWL -> Temperature conversion
   for (uint32_t t = 0; t < sizeof(Ads1115.addresses); t++) {
     //AddLog_P2(LOG_LEVEL_INFO, "Logging ADS1115 %02x", Ads1115.addresses[t]);
     if (Ads1115.found[t]) {
@@ -207,14 +226,32 @@ void Ads1115Show(bool json)
       if (json) {
         ResponseAppend_P(PSTR(",\"%s\":{"), label);
         for (uint32_t i = 0; i < 4; i++) {
-          ResponseAppend_P(PSTR("%s\"A%d\":%d"), (0 == i) ? "" : ",", i, values[i]);
+          //***BEGIN OF CHANGE: BWL -> Temperature conversion  
+          if( Settings.adc_param_type != ADC0_TEMP) {
+            ResponseAppend_P(PSTR("%s\"A%d\":%d"), (0 == i) ? "" : ",", i, values[i]);
+          } else{
+            adcTemperature = adcToTemperature(values[i]);
+            dtostrfd(adcTemperature, Settings.flag2.temperature_resolution, adcTemperature_c);
+            ResponseAppend_P(PSTR("%s\"T%d\":%s"), (0 == i) ? "" : ",", i, adcTemperature_c);
+          }
+          //ResponseAppend_P(PSTR("%s\"A%d\":%d"), (0 == i) ? "" : ",", i, values[i]);
+          //***END OF CHANGE: BWL -> Temperature conversion  
         }
         ResponseJsonEnd();
       }
 #ifdef USE_WEBSERVER
       else {
         for (uint32_t i = 0; i < 4; i++) {
-          WSContentSend_PD(HTTP_SNS_ANALOG, label, i, values[i]);
+          //***BEGIN OF CHANGE: BWL -> Temperature conversion  
+          if( Settings.adc_param_type != ADC0_TEMP) {
+            WSContentSend_PD(HTTP_SNS_ANALOG, label, i, values[i]);
+          } else{
+            adcTemperature = adcToTemperature(values[i]);
+            dtostrfd(adcTemperature, Settings.flag2.temperature_resolution, adcTemperature_c);
+            WSContentSend_PD(HTTP_SNS_TEMP, "", adcTemperature_c, TempUnit());
+          }
+          //WSContentSend_PD(HTTP_SNS_ANALOG, label, i, values[i]);
+          //***END OF CHANGE: BWL -> Temperature conversion 
         }
       }
 #endif  // USE_WEBSERVER
