@@ -1682,15 +1682,16 @@ void MI32Show(bool json)
       if (MI32.option.showRSSI && MI32.mode.triggeredTele) ResponseAppend_P(PSTR(",\"RSSI\":%d"), MIBLEsensors[i].rssi);
 
 
-      if(_positionCurlyBracket==strlen(mqtt_data)){
       //****BEGIN OF CHANGE BY BWL to publish Flora sensors for autodiscovery
+      if(_positionCurlyBracket==strlen(mqtt_data)){
         if(kMI32DeviceType[MIBLEsensors[i].type-1] == "Flora"){
           ResponseAppend_P(PSTR(",\"Temperature\":,\"Illuminance\":,\"Moisture\":,\"Fertility\":,\"RSSI\":")); // publish all expected sensors for HA MQTT Discovery 
         }else
         {
           ResponseAppend_P(PSTR(",")); // write some random char, to be overwritten in the next step
         }
-      }  
+      }
+      //****BEGIN OF CHANGE BY BWL to publish Flora sensors for autodiscovery
       ResponseAppend_P(PSTR("}"));
       mqtt_data[_positionCurlyBracket] = '{';
       MIBLEsensors[i].eventType.raw = 0;
