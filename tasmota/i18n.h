@@ -501,6 +501,11 @@
 #define D_CMND_LATITUDE "Latitude"
 #define D_CMND_LONGITUDE "Longitude"
 
+//Commands xdrv_14_mp3.ino
+#define D_JSON_TRACK "Track"
+#define D_JSON_VOLUME "Volume"
+#define D_JSON_EQ "Equalizer"
+
 // Commands xdrv_16_tuyadimmer.ino
 #define D_CMND_TUYA_MCU "TuyaMCU"
 #define D_CMND_TUYA_MCU_SEND_STATE "TuyaSend"

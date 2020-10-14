@@ -855,6 +855,7 @@ void HAssAnnounceSensors(void)
     int tele_period_save = tele_period;
     tele_period = 2;                                 // Do not allow HA updates during next function call
     XsnsNextCall(FUNC_JSON_APPEND, hass_xsns_index); // ,"INA219":{"Voltage":4.494,"Current":0.020,"Power":0.089}
+    XdrvCall(FUNC_JSON_APPEND); // MP3-Player Sensor
     tele_period = tele_period_save;
     size_t sensordata_len = strlen(mqtt_data);
     char sensordata[sensordata_len+2];   // dynamically adjust the size

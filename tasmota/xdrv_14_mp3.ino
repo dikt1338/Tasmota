@@ -624,7 +624,7 @@ void MP3HandleWebGui(void){
 \*********************************************************************************************/
 
 void MP3PlayerInit(void) {
-  MP3Player = new TasmotaSerial(pin[GPIO_RXD], pin[GPIO_MP3_DFR562]);                          //use RX from serial  as a little hack
+  MP3Player = new TasmotaSerial(Pin(GPIO_RXD), Pin(GPIO_MP3_DFR562));                          //use RX from serial  as a little hack
   AddLog_P2(LOG_LEVEL_DEBUG, PSTR("%sstart serial communication fixed to 9600 baud"),S_CONTROL_MP3);
   if (MP3Player->begin(9600)) {
     MP3Player->flush();
@@ -1222,16 +1222,16 @@ bool MP3PlayerCmd(void) {
 void Mp3Show(bool json)
 {
   if (json) {
-    char mp3Status[5];
+    char mp3Status[7];
     switch(MP3State.PlayMode){
       case 0:
-        sprintf (mp3Status,"stop");
+        sprintf (mp3Status,"off");
         break;
       case 1:
-        sprintf (mp3Status,"play");
+        sprintf (mp3Status,"playing");
         break;
       case 2:
-        sprintf (mp3Status,"pause");
+        sprintf (mp3Status,"paused");
         break;
     }
     char eqStatus[7];
@@ -1255,9 +1255,8 @@ void Mp3Show(bool json)
         sprintf (eqStatus,"Base");
         break;
     }
-    ResponseAppend_P(PSTR(",\"MP3Player\":{\"" D_JSON_STATUS "\":\"%s\",\"Track\":%u,\"Volume\":%u,\"EQ\":\"%s\"}"), mp3Status, MP3State.Track, MP3State.Volume, eqStatus  );
+    ResponseAppend_P(PSTR(",\"MP3Player\":{\"" D_JSON_STATUS "\":\"%s\",\"" D_JSON_TRACK "\":%d,\"" D_JSON_VOLUME "\":%d,\"" D_JSON_EQ "\":\"%s\"}"), mp3Status, MP3State.Track, MP3State.Volume, eqStatus  );
 
-// MP3_STATE MP3State;
   }
 }
 /*********************************************************************************************\
@@ -1268,7 +1267,7 @@ bool Xdrv14(uint8_t function)
 {
   bool result = false;
 
-  if ((pin[GPIO_RXD] < 99) && (pin[GPIO_MP3_DFR562] < 99)) { // new pix RX
+  if ((Pin(GPIO_RXD) < 99) && (Pin(GPIO_MP3_DFR562) < 99)) { // new pix RX
     switch (function) {
       case FUNC_PRE_INIT:
         MP3PlayerInit();                                    // init and start communication
