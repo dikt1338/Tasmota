@@ -1235,7 +1235,7 @@ void Mp3Show(bool json)
         break;
     }
     char eqStatus[7];
-    switch(MP3State.PlayMode){
+    switch(MP3State.EQ){
       case 0:
         sprintf (eqStatus,"Normal");
         break;
