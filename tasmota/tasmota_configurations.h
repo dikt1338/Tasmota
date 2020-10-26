@@ -821,6 +821,11 @@
 #undef USE_DEBUG_DRIVER                          // Disable debug code
 #endif  // FIRMWARE_MINIMAL
 
+//DAC support for ZR31 control
+#ifdef ESP32
+#define USE_ZR31
+#endif
+
 #ifdef ESP32
 #include "tasmota_configurations_ESP32.h"
 #endif  // ESP32

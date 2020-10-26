@@ -726,6 +726,7 @@
 #define D_SENSOR_IEM3000_RX    "iEM3000 RX"
 #define D_SENSOR_MIEL_HVAC_TX  "MiEl HVAC Tx"
 #define D_SENSOR_MIEL_HVAC_RX  "MiEl HVAC Rx"
+#define D_SENSOR_ZR31 "Inventer ZR31"
 
 // Units
 #define D_UNIT_AMPERE "安培"

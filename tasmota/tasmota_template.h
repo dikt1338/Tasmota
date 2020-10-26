@@ -148,7 +148,9 @@ enum UserSelectablePins {
   GPIO_DYP_RX,
   GPIO_MIEL_HVAC_TX, GPIO_MIEL_HVAC_RX,  // Mitsubishi Electric HVAC
   GPIO_WE517_TX, GPIO_WE517_RX,        // ORNO WE517 Serial interface
-  GPIO_SENSOR_END };
+  GPIO_DAC ,
+  GPIO_SENSOR_END
+  };
 
 enum ProgramSelectablePins {
   GPIO_FIX_START = 2046,
@@ -253,7 +255,8 @@ const char kSensorNames[] PROGMEM =
   D_SENSOR_ZIGBEE_RST "|"
   D_SENSOR_DYP_RX "|"
   D_SENSOR_MIEL_HVAC_TX "|" D_SENSOR_MIEL_HVAC_RX "|"
-  D_SENSOR_WE517_TX "|" D_SENSOR_WE517_RX
+  D_SENSOR_WE517_TX "|" D_SENSOR_WE517_RX "|"
+  D_SENSOR_ZR31
   ;
 
 const char kSensorNamesFixed[] PROGMEM =
@@ -487,6 +490,8 @@ const uint16_t kGpioNiceList[] PROGMEM = {
 #endif
 #endif  // USE_ENERGY_SENSOR
 
+  AGPIO(GPIO_DAC),
+
 /*-------------------------------------------------------------------------------------------*\
  * Serial sensors
 \*-------------------------------------------------------------------------------------------*/
@@ -652,7 +657,7 @@ const uint16_t kGpioNiceList[] PROGMEM = {
   AGPIO(GPIO_ADC_BUTTON_INV) + MAX_KEYS,
   AGPIO(GPIO_ADC_RANGE) + MAX_ADCS,       // Range
   AGPIO(GPIO_ADC_CT_POWER) + MAX_ADCS,    // Current
-  AGPIO(GPIO_ADC_JOY) + MAX_ADCS,         // Joystick
+  AGPIO(GPIO_ADC_JOY) + MAX_ADCS         // Joystick
 #endif  // ESP32
 };
 
@@ -1234,7 +1239,8 @@ const uint16_t kGpioConvert[] PROGMEM = {
   AGPIO(GPIO_IEM3000_TX),     // IEM3000 Serial interface
   AGPIO(GPIO_IEM3000_RX),     // IEM3000 Serial interface
   AGPIO(GPIO_ZIGBEE_RST),     // Zigbee reset
-  AGPIO(GPIO_DYP_RX)
+  AGPIO(GPIO_DYP_RX),
+  AGPIO(GPIO_DAC)
 };
 
 /********************************************************************************************/
