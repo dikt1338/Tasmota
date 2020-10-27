@@ -57,6 +57,21 @@ const char S_JSON_ZR31_COMMAND_NVALUE[] PROGMEM = "{\"" D_CMND_ZR31 "%s\":%d}";
   CMND_ZR31_MANUAL                                    // Switch to manual                                  
  };
 
+struct ZR31_STATE{
+  uint8_t function              = 0;
+  uint8_t tracksInActiveFolder  = 0;
+  uint8_t foldersRootSD         = 0;                // this are also /MP3 and /ADVERT, and incompatible folders 
+  uint8_t Version               = 0;
+  uint8_t Volume                = 0;
+  uint8_t EQ                    = 0;
+  uint8_t Track                 = 0;                // current track
+  uint8_t activeFolder          = 0;                // selected folder for further operations
+  uint8_t PBMode                = 0;                // stop/play/pause
+  uint8_t Device                = 2;                // 1 = USB Stick, 2 = SD-Card
+  uint8_t PlayMode              = 0;                // stop/play/pause
+};
+
+MP3_STATE MP3State;
 
 
 
@@ -65,7 +80,7 @@ const char S_JSON_ZR31_COMMAND_NVALUE[] PROGMEM = "{\"" D_CMND_ZR31 "%s\":%d}";
 \*********************************************************************************************/
 
 void ZR31Init(void) {
-  dacWrite(Pin(GPIO_DAC), 0);
+  ZR31SetVoltage(D_MANUAL_VOLTAGE_ZR31);
   return;
 }
 
@@ -186,6 +201,8 @@ bool Xdrv90(uint8_t function)
       case FUNC_COMMAND:
         result = ZR31Cmd();                      // return result from mp3 player command
         break;
+      case FUNC_JSON_APPEND:                     // return current state
+      break;
     }
   }
   return result;
