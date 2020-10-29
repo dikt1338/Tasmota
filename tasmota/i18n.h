@@ -198,6 +198,11 @@
 #define D_JSON_IMPORT "Import"
 #define D_JSON_EXPORT "Export"
 #define D_JSON_TOTAL_ACTIVE "TotalActive"
+/*********************************************************************************************\
+ * DACS
+\*********************************************************************************************/
+#define D_JSON_FUNCTION "Function"
+#define D_JSON_LEVEL "Level"
 
 #define D_RSLT_ENERGY "ENERGY"
 #define D_RSLT_HASS_STATE "HASS_STATE"
