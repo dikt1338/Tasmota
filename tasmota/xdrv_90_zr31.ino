@@ -217,7 +217,7 @@ void ZR31Show(bool json)
   dtostrfd(ZR31State.voltage, Settings.flag2.voltage_resolution, voltage_chr);
 
   if (json) {
-    ResponseAppend_P(PSTR(",\"ZR31\":{\"" D_JSON_FUNCTION "\":\"%s\",\"" D_JSON_LEVEL "\":%d\",\"" D_JSON_VOLTAGE "\":\"%s\"}"), zr31Status, ZR31State.level, voltage_chr );
+    ResponseAppend_P(PSTR(",\"ZR31\":{\"" D_JSON_FUNCTION "\":\"%s\",\"" D_JSON_LEVEL "\":\"%d\",\"" D_JSON_VOLTAGE "\":\"%s\"}"), zr31Status, ZR31State.level, voltage_chr );
   }else{
     #ifdef USE_WEBSERVER  // USE_WEBSERVER
 
